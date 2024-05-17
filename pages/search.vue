@@ -50,6 +50,7 @@ const page = ref(1)
 const exact = ref(false)
 
 const sources = ref([])
+const skeletonLoading = ref(true)
 const handleSearchByHunhe = async () => {
   let res = await $fetch('/api/sources/hh/search', {
     method: 'POST',
@@ -64,41 +65,46 @@ const handleSearchByHunhe = async () => {
     }
   })
   if (res.code === 200) {
+    skeletonLoading.value = false
     sources.value = res.data
+  }else {
+    ElMessage.error(res.msg)
+    skeletonLoading.value = false
   }
 }
 
 const search = (e) => {
   keyword.value = e
+  skeletonLoading.value = true
   handleSearchByHunhe()
 }
 
 const handleChangeTab = (e) => {
   currentTabValue.value = e
+  skeletonLoading.value = true
   handleSearchByHunhe()
 }
 
 const handleCurrentPageChange = (e) => {
   page.value = e
+  skeletonLoading.value = true
   window.scroll(0, 0)
   handleSearchByHunhe()
 }
 
 const handleChangeExact = (e) => {
   exact.value = !e
+  skeletonLoading.value = true
   handleSearchByHunhe()
 }
 const handleEngineChange = (e) => {
   currentEngine.value = e
+  skeletonLoading.value = true
   handleSearchByHunhe()
 }
 const latestSourcesData = ref([])
+const latestSkeletonLoading = ref(true)
 const getLatestSourcesData = async (page, size) => {
-  const loading = ElLoading.service({
-    text: '加载中...',
-    background: 'transparent',
-    target: '#latest-sources',
-  })
   let res = await $fetch('/api/sources/hh/latest-sources', {
     method: 'get',
     query: {
@@ -107,8 +113,11 @@ const getLatestSourcesData = async (page, size) => {
     }
   })
   if (res.code === 200) {
+    latestSkeletonLoading.value = false
     latestSourcesData.value = res.data
-    loading.close()
+  }else {
+    ElMessage.error(res.msg)
+    latestSkeletonLoading.value = false
   }
 }
 const handleGoToLatestSources = () => {
@@ -185,7 +194,7 @@ onMounted(() => {
           </ul>
         </div>
 
-        <disk-info-list :sources="sources" @open-link="handleOpenSourceLink"></disk-info-list>
+        <disk-info-list :sources="sources" :skeleton-loading="skeletonLoading" @open-link="handleOpenSourceLink"></disk-info-list>
 
         <div class="py-[40px] flex justify-center">
           <client-only>
@@ -206,23 +215,38 @@ onMounted(() => {
               <el-button link icon="refresh" @click="getLatestSourcesData(1, 10)"></el-button>
               <el-button link icon="more" @click="handleGoToLatestSources()"></el-button>
             </div>
-
           </div>
           <div class="grid grid-cols-1 gap-3 mt-3 min-h-[500px]" id="latest-sources">
-            <div
-                class="bg-white shadow p-[14px] rounded-[6px] cursor-pointer
+            <el-skeleton  animated :loading="latestSkeletonLoading" :count="10">
+              <template #template>
+                <div
+                    class="bg-white shadow p-[14px] rounded-[6px] cursor-pointer mb-3
                 hover:bg-[#f5f5f5] hover:shadow-lg transition duration-300 ease-in-out"
-                v-for="(item,i) in latestSourcesData?.list" :key="i"
-                @click="handleOpenSourceLink(item.link)"
-            >
-              <div class="flex flex-row gap-2 items-center">
-                <img class="w-[20px]" v-if="item.disk_type === 'ALY'" src="@/assets/netdisk/aliyun.png" alt="aliyun">
-                <img class="w-[20px]" v-if="item.disk_type === 'QUARK'" src="@/assets/netdisk/quark.png" alt="quark">
-                <img class="w-[20px]" v-if="item.disk_type === 'BDY'" src="@/assets/netdisk/baidu.png" alt="baidu">
-                <img class="w-[20px]" v-if="item.disk_type === 'XUNLEI'" src="@/assets/netdisk/xunlei.png" alt="xunlei">
-                <span class="text-[14px] font-inter">{{ item.disk_name }}</span>
-              </div>
-            </div>
+                >
+                  <div class="flex flex-row gap-2 items-center">
+                    <el-skeleton-item variant="image" style="width: 20px; height: 20px" />
+                    <el-skeleton-item variant="text" style="width: 100px;" />
+                  </div>
+                </div>
+              </template>
+              <template #default>
+                <div
+                    class="bg-white shadow p-[14px] rounded-[6px] cursor-pointer
+                hover:bg-[#f5f5f5] hover:shadow-lg transition duration-300 ease-in-out"
+                    v-for="(item,i) in latestSourcesData?.list" :key="i"
+                    @click="handleOpenSourceLink(item.link)"
+                >
+                  <div class="flex flex-row gap-2 items-center">
+                    <img class="w-[20px]" v-if="item.disk_type === 'ALY'" src="@/assets/netdisk/aliyun.png" alt="aliyun">
+                    <img class="w-[20px]" v-if="item.disk_type === 'QUARK'" src="@/assets/netdisk/quark.png" alt="quark">
+                    <img class="w-[20px]" v-if="item.disk_type === 'BDY'" src="@/assets/netdisk/baidu.png" alt="baidu">
+                    <img class="w-[20px]" v-if="item.disk_type === 'XUNLEI'" src="@/assets/netdisk/xunlei.png" alt="xunlei">
+                    <span class="text-[14px] font-inter">{{ item.disk_name }}</span>
+                  </div>
+                </div>
+              </template>
+            </el-skeleton>
+
           </div>
         </div>
 

@@ -11,7 +11,7 @@ const search = (keyword) => {
 const donate = () => {
   router.push({path:'/donate'})
 }
-const hotKeywords = ref(['庆余年2','歌手2024','庆余年','我的阿勒泰','新生'])
+const hotKeywords = ref(['庆余年','歌手2024','我的阿勒泰','新生','周处除三害','热辣滚烫','第二十条','承欢记','哈哈哈哈哈'])
 </script>
 
 <template>

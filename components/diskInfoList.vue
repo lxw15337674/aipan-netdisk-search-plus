@@ -57,7 +57,7 @@ const formatDate = (date: string) => {
     </template>
     <template #default>
       <div
-          class="bg-white shadow p-[14px] rounded-[6px] cursor-pointer
+          class="bg-white shadow p-[14px] rounded-[6px] cursor-pointer max-h-[140px]
               hover:bg-[#f5f5f5] hover:shadow-lg transition duration-300 ease-in-out"
           v-for="(item,i) in sources?.list" :key="i"
           @click="handleOpenSourceLink(item.link)"

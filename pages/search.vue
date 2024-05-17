@@ -11,9 +11,25 @@ definePageMeta({
 })
 
 const router = useRouter()
+const handleOpenSourceLink = (link) => {
+  window.open(link, '_blank')
+}
+const handleOpenLatestSourceLink = async (item) => {
 
-const handleOpenSourceLink = (url) => {
-  window.open(url, '_blank')
+  if (currentEngine.value !== 8) {
+    let res = await $fetch('/api/sources/hh/doc', {
+      method: "POST",
+      body: {
+        engine: currentEngine.value,
+        doc_id: item.doc_id
+      }
+    })
+    if (res.code === 200) {
+      window.open(res.data.link, '_blank')
+    }
+  } else {
+    window.open(item.link, '_blank')
+  }
 }
 
 const tabsOptions = [
@@ -67,25 +83,28 @@ const handleSearchByHunhe = async () => {
   if (res.code === 200) {
     skeletonLoading.value = false
     sources.value = res.data
-  }else {
+  } else {
     ElMessage.error(res.msg)
     skeletonLoading.value = false
   }
 }
 
 const search = (e) => {
+  sources.value = []
   keyword.value = e
   skeletonLoading.value = true
   handleSearchByHunhe()
 }
 
 const handleChangeTab = (e) => {
+  sources.value = []
   currentTabValue.value = e
   skeletonLoading.value = true
   handleSearchByHunhe()
 }
 
 const handleCurrentPageChange = (e) => {
+  sources.value = []
   page.value = e
   skeletonLoading.value = true
   window.scroll(0, 0)
@@ -95,12 +114,18 @@ const handleCurrentPageChange = (e) => {
 const handleChangeExact = (e) => {
   exact.value = !e
   skeletonLoading.value = true
+  sources.value = []
   handleSearchByHunhe()
 }
 const handleEngineChange = (e) => {
   currentEngine.value = e
   skeletonLoading.value = true
+  latestSkeletonLoading.value = true
+  sources.value = []
+  latestSourcesData.value = []
+
   handleSearchByHunhe()
+  getLatestSourcesData(1, 10)
 }
 const latestSourcesData = ref([])
 const latestSkeletonLoading = ref(true)
@@ -108,6 +133,7 @@ const getLatestSourcesData = async (page, size) => {
   let res = await $fetch('/api/sources/hh/latest-sources', {
     method: 'get',
     query: {
+      engine: currentEngine.value,
       page: page,
       size: size
     }
@@ -115,7 +141,7 @@ const getLatestSourcesData = async (page, size) => {
   if (res.code === 200) {
     latestSkeletonLoading.value = false
     latestSourcesData.value = res.data
-  }else {
+  } else {
     ElMessage.error(res.msg)
     latestSkeletonLoading.value = false
   }
@@ -123,43 +149,15 @@ const getLatestSourcesData = async (page, size) => {
 const handleGoToLatestSources = () => {
   router.push({path: '/latest-sources'})
 }
-const currentEngine = ref(1)
-const searchOptions = [
-  {
-    label: '引擎(1)',
-    value: 1
-  },
-  {
-    label: '引擎(2)',
-    value: 2
-  },
-  {
-    label: '引擎(3)',
-    value: 3
-  },
-  {
-    label: '引擎(4)',
-    value: 4
-  },
-  {
-    label: '引擎(5)',
-    value: 5
-  },
-  {
-    label: '引擎(6)',
-    value: 6
-  },
-  {
-    label: '引擎(7)',
-    value: 7
-  },
-  {
-    label: '引擎(8)',
-    value: 8
-  }
-]
+
+const currentEngine = ref(2)
+const apiEndpointsData = ref([])
+const getApiEndpoints = async () => {
+  apiEndpointsData.value = await $fetch('/api/sources/api-endpoints')
+}
 
 onMounted(() => {
+  getApiEndpoints()
   handleSearchByHunhe()
   getLatestSourcesData(1, 10)
 })
@@ -170,7 +168,7 @@ onMounted(() => {
     <search-header :keyword="keyword" @search="search"></search-header>
 
     <div class="max-w-[1240px] mx-auto grid grid-cols-1 md:grid-cols-[1fr_400px] gap-8">
-      <div class="grid grid-cols-1 gap-3 sm:mt-3 sm:pb-[60px] min-h-[500px] p-[20px] md:p-0">
+      <div class="flex flex-col gap-3 sm:mt-3 sm:pb-[60px] p-[20px] md:p-0">
         <div class="py-3">
           <ul class="flex flex-row gap-3 flex-wrap">
             <li v-for="(item,i) in tabsOptions" :key="i">
@@ -192,9 +190,11 @@ onMounted(() => {
                   v-model="currentEngine"
                   placeholder="Select"
                   style="width: 140px"
+                  value-key="engine"
                   @change="handleEngineChange"
               >
-                <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
+                <el-option v-for="item in apiEndpointsData" :key="item.engine" :label="item.engine_name"
+                           :value="item.engine">
 
                 </el-option>
               </el-select>
@@ -202,7 +202,9 @@ onMounted(() => {
           </ul>
         </div>
 
-        <disk-info-list :sources="sources" :skeleton-loading="skeletonLoading" @open-link="handleOpenSourceLink"></disk-info-list>
+        <disk-info-list :sources="sources" :skeleton-loading="skeletonLoading"
+                        @open-link="handleOpenSourceLink">
+        </disk-info-list>
 
         <div class="py-[40px] flex justify-center">
           <client-only>
@@ -225,15 +227,15 @@ onMounted(() => {
             </div>
           </div>
           <div class="grid grid-cols-1 gap-3 mt-3 min-h-[500px]" id="latest-sources">
-            <el-skeleton  animated :loading="latestSkeletonLoading" :count="10">
+            <el-skeleton animated :loading="latestSkeletonLoading" :count="10">
               <template #template>
                 <div
                     class="bg-white shadow p-[14px] rounded-[6px] cursor-pointer mb-3
                 hover:bg-[#f5f5f5] hover:shadow-lg transition duration-300 ease-in-out"
                 >
                   <div class="flex flex-row gap-2 items-center">
-                    <el-skeleton-item variant="image" style="width: 20px; height: 20px" />
-                    <el-skeleton-item variant="text" style="width: 100px;" />
+                    <el-skeleton-item variant="image" style="width: 20px; height: 20px"/>
+                    <el-skeleton-item variant="text" style="width: 100px;"/>
                   </div>
                 </div>
               </template>
@@ -242,13 +244,16 @@ onMounted(() => {
                     class="bg-white shadow p-[14px] rounded-[6px] cursor-pointer
                 hover:bg-[#f5f5f5] hover:shadow-lg transition duration-300 ease-in-out"
                     v-for="(item,i) in latestSourcesData?.list ? latestSourcesData?.list : latestSourcesData" :key="i"
-                    @click="handleOpenSourceLink(item.link)"
+                    @click="handleOpenLatestSourceLink(item)"
                 >
                   <div class="flex flex-row gap-2 items-center">
-                    <img class="w-[20px]" v-if="item.disk_type === 'ALY'" src="@/assets/netdisk/aliyun.png" alt="aliyun">
-                    <img class="w-[20px]" v-if="item.disk_type === 'QUARK'" src="@/assets/netdisk/quark.png" alt="quark">
+                    <img class="w-[20px]" v-if="item.disk_type === 'ALY'" src="@/assets/netdisk/aliyun.png"
+                         alt="aliyun">
+                    <img class="w-[20px]" v-if="item.disk_type === 'QUARK'" src="@/assets/netdisk/quark.png"
+                         alt="quark">
                     <img class="w-[20px]" v-if="item.disk_type === 'BDY'" src="@/assets/netdisk/baidu.png" alt="baidu">
-                    <img class="w-[20px]" v-if="item.disk_type === 'XUNLEI'" src="@/assets/netdisk/xunlei.png" alt="xunlei">
+                    <img class="w-[20px]" v-if="item.disk_type === 'XUNLEI'" src="@/assets/netdisk/xunlei.png"
+                         alt="xunlei">
                     <span class="text-[14px] font-inter break-words truncate">{{ item.disk_name }}</span>
                   </div>
                 </div>

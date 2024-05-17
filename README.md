@@ -1,6 +1,9 @@
 # 爱盼-网盘资源搜索Web
-爱盼-网盘资源搜索：是一个免费开源项目，感谢 [混合盘提供的API](https://docs.hunhepan.com/api-docs.html)
+爱盼-网盘资源搜索：是一个免费开源项目!
 👉 [爱盼-网盘资源搜索](https://so.aicompasspro.com)
+
+### 建议
+项目使用的是第三方的API，对ip有访问限制，建议自己部署使用。
 
 ## 快速开始
 

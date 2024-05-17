@@ -1,9 +1,9 @@
 export default defineEventHandler(async (event) => {
 
     const query = await getQuery(event)
-
+    // https://so.yuneu.com/v1/disk/latest
     try{
-        let res =  await  $fetch('https://api.hunhepan.com/v1/raw_disk/latest_with_extab',{
+        let res =  await  $fetch('https://alipanx.com/v1/disk/latest',{
             method:'GET',
             query:{
                 type: query.type,

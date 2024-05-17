@@ -126,28 +126,36 @@ const handleGoToLatestSources = () => {
 const currentEngine = ref(1)
 const searchOptions = [
   {
-    label: '默认引擎',
+    label: '引擎(1)',
     value: 1
   },
   {
-    label: '搜索引擎一',
+    label: '引擎(2)',
     value: 2
   },
   {
-    label: '搜索引擎二',
+    label: '引擎(3)',
     value: 3
   },
   {
-    label: '搜索引擎三',
+    label: '引擎(4)',
     value: 4
   },
   {
-    label: '搜索引擎四',
+    label: '引擎(5)',
     value: 5
   },
   {
-    label: '搜索引擎五',
+    label: '引擎(6)',
     value: 6
+  },
+  {
+    label: '引擎(7)',
+    value: 7
+  },
+  {
+    label: '引擎(8)',
+    value: 8
   }
 ]
 
@@ -233,7 +241,7 @@ onMounted(() => {
                 <div
                     class="bg-white shadow p-[14px] rounded-[6px] cursor-pointer
                 hover:bg-[#f5f5f5] hover:shadow-lg transition duration-300 ease-in-out"
-                    v-for="(item,i) in latestSourcesData?.list" :key="i"
+                    v-for="(item,i) in latestSourcesData?.list ? latestSourcesData?.list : latestSourcesData" :key="i"
                     @click="handleOpenSourceLink(item.link)"
                 >
                   <div class="flex flex-row gap-2 items-center">
@@ -241,7 +249,7 @@ onMounted(() => {
                     <img class="w-[20px]" v-if="item.disk_type === 'QUARK'" src="@/assets/netdisk/quark.png" alt="quark">
                     <img class="w-[20px]" v-if="item.disk_type === 'BDY'" src="@/assets/netdisk/baidu.png" alt="baidu">
                     <img class="w-[20px]" v-if="item.disk_type === 'XUNLEI'" src="@/assets/netdisk/xunlei.png" alt="xunlei">
-                    <span class="text-[14px] font-inter">{{ item.disk_name }}</span>
+                    <span class="text-[14px] font-inter break-words truncate">{{ item.disk_name }}</span>
                   </div>
                 </div>
               </template>

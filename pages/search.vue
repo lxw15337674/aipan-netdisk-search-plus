@@ -65,7 +65,7 @@ const currentTabValue = ref('')
 const page = ref(1)
 const exact = ref(false)
 
-const sources = ref([])
+const sources = ref({})
 const skeletonLoading = ref(true)
 const handleSearchByHunhe = async () => {
   let res = await $fetch('/api/sources/hh/search', {
@@ -90,21 +90,20 @@ const handleSearchByHunhe = async () => {
 }
 
 const search = (e) => {
-  sources.value = []
+  sources.value = {}
   keyword.value = e
   skeletonLoading.value = true
   handleSearchByHunhe()
 }
 
 const handleChangeTab = (e) => {
-  sources.value = []
+  sources.value = {}
   currentTabValue.value = e
   skeletonLoading.value = true
   handleSearchByHunhe()
 }
 
 const handleCurrentPageChange = (e) => {
-  sources.value = []
   page.value = e
   skeletonLoading.value = true
   window.scroll(0, 0)
@@ -114,14 +113,14 @@ const handleCurrentPageChange = (e) => {
 const handleChangeExact = (e) => {
   exact.value = !e
   skeletonLoading.value = true
-  sources.value = []
+  sources.value = {}
   handleSearchByHunhe()
 }
 const handleEngineChange = (e) => {
   currentEngine.value = e
   skeletonLoading.value = true
   latestSkeletonLoading.value = true
-  sources.value = []
+  sources.value = {}
   latestSourcesData.value = []
 
   handleSearchByHunhe()
@@ -207,14 +206,13 @@ onMounted(() => {
         </disk-info-list>
 
         <div class="py-[40px] flex justify-center">
-          <client-only>
-            <el-pagination
-                layout="prev, pager, next"
-                @current-change="handleCurrentPageChange"
-                :total="sources?.total"
-            ></el-pagination>
-          </client-only>
-
+          <el-pagination
+              :current-page="page"
+              :page-size="10"
+              layout="prev, pager, next"
+              @current-change="handleCurrentPageChange"
+              :total="sources?.total"
+          />
         </div>
       </div>
       <div class="p-[20px] sm:py-[20px]">

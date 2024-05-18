@@ -12,14 +12,28 @@ const donate = () => {
   router.push({path:'/donate'})
 }
 const hotKeywords = ref(['庆余年','歌手2024','我的阿勒泰','新生','周处除三害','热辣滚烫','第二十条','承欢记','哈哈哈哈哈'])
+
+const colorMode = useColorMode()
+
+console.log(colorMode.preference)
+
+
 </script>
 
 <template>
-  <div class="bg-[#ffffff] min-h-screen py-[60px]">
+  <div class="bg-[#ffffff] dark:bg-gray-800 min-h-screen py-[60px]">
 
+    <div class="max-w-[1240px] mx-auto text-right px-[20px]">
+       <el-button v-if="colorMode.preference === 'dark'" link @click="colorMode.preference = 'light'">
+         <img class="w-[20px] h-[20px]" src="@/assets/theme/entypo--light-up.svg" alt="">
+       </el-button>
+       <el-button v-if="colorMode.preference === 'light'" link @click="colorMode.preference = 'dark'">
+         <img class="w-[20px] h-[20px]" src="@/assets/theme/icon-park-solid--dark-mode.svg" alt="">
+       </el-button>
+    </div>
     <div class="flex flex-row items-center justify-center gap-3 mt-[80px]">
       <img class="w-[40px] h-[40px] sm:w-[60px] sm:h-[60px]" src="@/assets/my-logo.png" alt="logo">
-      <h1 class="text-[18px] sm:text-[24px] font-serif font-bold ">爱盼-网盘资源搜索</h1>
+      <h1 class="text-[18px] sm:text-[24px] font-serif font-bold dark:text-white ">爱盼-网盘资源搜索</h1>
     </div>
 
     <div class="max-w-[1240px] mx-auto mt-[20px]">
@@ -36,7 +50,7 @@ const hotKeywords = ref(['庆余年','歌手2024','我的阿勒泰','新生','�
       </div>
     </div>
 
-    <div class="max-w-[1240px] mx-auto mt-[20px]">
+    <div class="max-w-[520px] mx-auto mt-[20px]">
       <div class="flex flex-row flex-wrap gap-1 justify-center">
         <el-tag class="mx-1 cursor-pointer"
                 v-for="keyword in hotKeywords"
@@ -50,13 +64,13 @@ const hotKeywords = ref(['庆余年','歌手2024','我的阿勒泰','新生','�
 
     </div>
 
-    <div class="fixed bottom-0 left-0 right-0 bg-white p-3">
+    <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-3">
       <div class="flex flex-row items-center justify-center  gap-3 my-3">
         <a class="" href="https://github.com/unilei/aipan-netdisk-search">
-          <img class="w-[50px] h-[50px]" src="@/assets/github.png" alt="github">
+          <img class="w-[30px] h-[30px]" src="@/assets/skill-icons--github-dark.svg" alt="github">
         </a>
-        <el-button color="#ffffff" @click="donate()">
-          <img  class="w-[50px] h-[50px]" src="@/assets/donation/dashang.svg" alt="打赏">
+        <el-button link color="#ffffff" @click="donate()">
+          <img  class="w-[30px] h-[30px]" src="@/assets/donation/dashang.svg" alt="打赏">
         </el-button>
       </div>
       <p class="text-center text-[8px] sm:text-[12px] text-slate-400">

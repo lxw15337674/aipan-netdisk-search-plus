@@ -40,7 +40,7 @@ const formatDate = (date: string) => {
   <el-skeleton :loading="skeletonLoading" animated :count="20">
     <template #template>
       <div
-          class="bg-white shadow p-[14px] rounded-[6px] cursor-pointer mb-3
+          class="bg-white dark:bg-gray-600 shadow p-[14px] rounded-[6px] cursor-pointer mb-3
                   hover:bg-[#f5f5f5] hover:shadow-lg transition duration-300 ease-in-out"
       >
         <div class="flex flex-row gap-2 items-center">
@@ -57,8 +57,8 @@ const formatDate = (date: string) => {
     </template>
     <template #default>
       <div
-          class="bg-white shadow p-[14px] rounded-[6px] cursor-pointer max-h-[140px]
-              hover:bg-[#f5f5f5] hover:shadow-lg transition duration-300 ease-in-out"
+          class="bg-white dark:bg-gray-600 shadow p-[14px] rounded-[6px] cursor-pointer
+              hover:bg-[#f5f5f5] dark:hover:bg-gray-700 hover:shadow-lg transition duration-300 ease-in-out"
           v-for="(item,i) in sources?.list" :key="i"
           @click="handleOpenSourceLink(item.link)"
       >
@@ -67,10 +67,10 @@ const formatDate = (date: string) => {
           <img class="w-[20px]" v-if="item.disk_type === 'QUARK'" src="@/assets/netdisk/quark.png" alt="quark">
           <img class="w-[20px]" v-if="item.disk_type === 'BDY'" src="@/assets/netdisk/baidu.png" alt="baidu">
           <img class="w-[20px]" v-if="item.disk_type === 'XUNLEI'" src="@/assets/netdisk/xunlei.png" alt="xunlei">
-          <p class="text-[14px] font-inter font-[600]" v-html="item.disk_name"></p>
+          <p class="text-[14px] font-inter font-[600] truncate dark:text-white" v-html="item.disk_name"></p>
         </div>
         <div class="py-[12px]">
-          <p class="text-[12px] text-slate-400 truncate-3-lines" v-html="item.files"></p>
+          <p class="text-[12px] text-slate-400 dark:text-slate-200 truncate-3-lines" v-html="item.files"></p>
         </div>
         <div class="text-[12px] text-slate-600 flex flex-row items-center  justify-between">
           <div class="flex flex-row items-center gap-2">
@@ -97,6 +97,9 @@ const formatDate = (date: string) => {
 em {
   color: blue;
   margin: 0 2px;
+}
+.dark em {
+  color: deepskyblue;
 }
 </style>
 <style scoped>

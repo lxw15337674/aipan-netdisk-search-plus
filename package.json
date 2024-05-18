@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
+    "@nuxtjs/color-mode": "^3.4.1",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",

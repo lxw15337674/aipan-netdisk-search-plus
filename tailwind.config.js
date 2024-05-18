@@ -1,4 +1,5 @@
 export const theme = {
+    darkMode: 'class',
     extend: {
         fontFamily: {
             'inter': ['Inter', 'sans-serif'],

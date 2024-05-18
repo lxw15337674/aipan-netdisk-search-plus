@@ -24,12 +24,15 @@ console.log(colorMode.preference)
   <div class="bg-[#ffffff] dark:bg-gray-800 min-h-screen py-[60px]">
 
     <div class="max-w-[1240px] mx-auto text-right px-[20px]">
-       <el-button v-if="colorMode.preference === 'dark'" link @click="colorMode.preference = 'light'">
-         <img class="w-[20px] h-[20px]" src="@/assets/theme/entypo--light-up.svg" alt="">
-       </el-button>
-       <el-button v-if="colorMode.preference === 'light'" link @click="colorMode.preference = 'dark'">
-         <img class="w-[20px] h-[20px]" src="@/assets/theme/icon-park-solid--dark-mode.svg" alt="">
-       </el-button>
+      <client-only>
+        <el-button v-if="colorMode.preference === 'dark'" link @click="colorMode.preference = 'light'">
+          <img class="w-[20px] h-[20px]" src="@/assets/theme/entypo--light-up.svg" alt="">
+        </el-button>
+        <el-button v-if="colorMode.preference === 'light'" link @click="colorMode.preference = 'dark'">
+          <img class="w-[20px] h-[20px]" src="@/assets/theme/icon-park-solid--dark-mode.svg" alt="">
+        </el-button>
+      </client-only>
+
     </div>
     <div class="flex flex-row items-center justify-center gap-3 mt-[80px]">
       <img class="w-[40px] h-[40px] sm:w-[60px] sm:h-[60px]" src="@/assets/my-logo.png" alt="logo">
@@ -37,9 +40,9 @@ console.log(colorMode.preference)
     </div>
 
     <div class="max-w-[1240px] mx-auto mt-[20px]">
-      <div class="w-[80%] md:w-[700px] mx-auto border border-slate-300 font-mono overflow-hidden rounded-[50px]">
+      <div class="w-[80%] md:w-[700px] mx-auto h-[40px] sm:h-[50px] border border-slate-300 font-mono overflow-hidden rounded-[50px]">
         <client-only>
-          <el-input class="h-[40px] sm:h-[50px]"
+          <el-input
                     v-model="searchKeyword"
                     placeholder="请输入关键词搜索"
                     @keydown.enter="search(searchKeyword)"

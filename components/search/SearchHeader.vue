@@ -47,12 +47,14 @@ console.log(colorMode.preference)
         </div>
 
         <div class="absolute right-[10px] md:right-[20px]">
-          <el-button v-if="colorMode.preference === 'dark'" link @click="colorMode.preference = 'light'">
-            <img class="w-[20px] h-[20px]" src="@/assets/theme/entypo--light-up.svg" alt="">
-          </el-button>
-          <el-button v-if="colorMode.preference === 'light'" link @click="colorMode.preference = 'dark'">
-            <img class="w-[20px] h-[20px]" src="@/assets/theme/icon-park-solid--dark-mode.svg" alt="">
-          </el-button>
+          <client-only>
+            <el-button v-if="colorMode.preference === 'dark'" link @click="colorMode.preference = 'light'">
+              <img class="w-[20px] h-[20px]" src="@/assets/theme/entypo--light-up.svg" alt="">
+            </el-button>
+            <el-button v-if="colorMode.preference === 'light'" link @click="colorMode.preference = 'dark'">
+              <img class="w-[20px] h-[20px]" src="@/assets/theme/icon-park-solid--dark-mode.svg" alt="">
+            </el-button>
+          </client-only>
           <el-button link @click="goGithub()">
             <img class="w-[20px] h-[20px]" src="@/assets/skill-icons--github-dark.svg" alt="github">
           </el-button>

@@ -12,12 +12,24 @@ const donate = () => {
   router.push({path:'/donate'})
 }
 const hotKeywords = ref(['庆余年','歌手2024','我的阿勒泰','新生','周处除三害','热辣滚烫','第二十条','承欢记','哈哈哈哈哈'])
+const doubanNewMoviesData = ref([])
 
 const colorMode = useColorMode()
 
 console.log(colorMode.preference)
 
-
+const getDouBanNewMovies = async () => {
+  let res = await $fetch('/api/douban/new')
+  console.log(res)
+  if(res.code === 200){
+    let resData = res.data;
+    resData = resData.map(item => item.title)
+    doubanNewMoviesData.value = resData
+  }
+}
+onMounted(() => {
+  getDouBanNewMovies()
+})
 </script>
 
 <template>
@@ -59,12 +71,30 @@ console.log(colorMode.preference)
                 v-for="keyword in hotKeywords"
                 :key="keyword"
                 type="info"
+                color="#f5f5f5"
+                round
                 @click="search(keyword)"
         >
           {{ keyword }}
         </el-tag>
       </div>
+    </div>
 
+    <div>
+      <div class="max-w-[80%] md:max-w-[700px] mx-auto mt-[20px]">
+        <div class="grid grid-cols-1 md:grid-cols-2  gap-1  ">
+          <el-tag class="mx-1 cursor-pointer"
+                  style="justify-content: flex-start;padding: 14px 20px"
+                  v-for="movie in doubanNewMoviesData"
+                  :key="movie"
+                  type="info"
+                  round
+                  @click="search(movie)"
+          >
+            {{ movie }}
+          </el-tag>
+        </div>
+      </div>
     </div>
 
     <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 p-3">

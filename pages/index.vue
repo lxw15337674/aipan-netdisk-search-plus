@@ -87,7 +87,12 @@ console.log(colorMode.preference)
 :deep(.el-input__inner) {
   height: 48px;
 }
+@media screen and (max-width: 768px) {
+  :deep(.el-input__inner) {
+    height: 37px;
+  }
 
+}
 :deep(.el-input__wrapper) {
   box-shadow: none;
 }

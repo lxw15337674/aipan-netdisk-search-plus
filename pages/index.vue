@@ -81,8 +81,10 @@ onMounted(() => {
     </div>
 
     <div>
+
       <div class="max-w-[80%] md:max-w-[700px] mx-auto mt-[20px]">
-        <div class="grid grid-cols-1 md:grid-cols-2  gap-1  ">
+        <h1 class="text-[12px] sm:text-[14px] text-slate-600 font-bold dark:text-white mt-[20px]">豆瓣新片榜</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2  gap-2  mt-[10px]">
           <el-tag class="mx-1 cursor-pointer"
                   style="justify-content: flex-start;padding: 14px 20px"
                   v-for="movie in doubanNewMoviesData"

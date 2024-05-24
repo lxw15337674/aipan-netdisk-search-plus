@@ -1,6 +1,6 @@
 # 爱盼-网盘资源搜索Web
 **基于[aipan-netdisk-search](https://github.com/unilei/aipan-netdisk-search),修复源、跳转。
-有时间会继续维护，有问题提issues**
+会持续维护，有问题提issues，谢谢。**
  
 ### 建议
 项目使用的是第三方的API，对ip有访问限制，建议自己部署使用。

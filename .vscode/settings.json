@@ -1,0 +1,6 @@
+{
+    "i18n-ally.localesPaths": [
+        "assets/lang"
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
+}

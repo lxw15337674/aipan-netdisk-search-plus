@@ -12,7 +12,7 @@ definePageMeta({
 
 const router = useRouter()
 const handleOpenSourceLink = (link) => {
-  window.open(link, '_blank')
+  window.open(link.link, '_blank')
 }
 const handleOpenLatestSourceLink = async (item) => {
 
